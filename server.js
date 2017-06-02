@@ -162,7 +162,13 @@ io.on('connection', function (socket) {
 
     });
 
-
+    socket.on('messageToGroup', function (messageData) {
+        socket.broadcast.emit('groupTalk', {
+            fromID: Number(messageData.fromID),
+            from: messageData.from,
+            message: messageData.message
+        });
+    })
 
     socket.on('addFriend', function (userData) {
         // var sqlQuery = "insert into friends(u1_id, u2_id) values(" + userData.uid + ", " + userData.toAddID + "), (" + userData.toAddID + ", " + userData.uid + ");";
@@ -179,11 +185,6 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         console.log('A user disconnected');
-        for (var index in sockets) {
-            if (sockets[index].username == socket.username) {
-                sockets.splice(index, 1);
-            }
-        }
     })
 });
 
